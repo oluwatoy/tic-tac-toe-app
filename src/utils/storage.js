@@ -1,0 +1,29 @@
+function loader(key) {
+  return (validator, fallbackSupplier) => () => {
+    const item = window.localStorage.getItem(key);
+
+    try {
+      if (item) {
+        return validator(JSON.parse(item));
+      }
+    } catch (error) {
+      console.error(`Unable to load ${key} from localStorage`, error);
+    }
+
+    return fallbackSupplier();
+  };
+}
+
+export const loadBoardFromStorage = loader("board");
+
+export const loadTurnFromStorage = loader("turn");
+
+export const saveGameToStorage = ({ board, turn }) => {
+  window.localStorage.setItem("board", JSON.stringify(board));
+  window.localStorage.setItem("turn", JSON.stringify(turn));
+};
+
+export const resetGameStorage = () => {
+  window.localStorage.removeItem("board");
+  window.localStorage.removeItem("turn");
+};
